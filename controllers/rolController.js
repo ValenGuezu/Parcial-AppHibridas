@@ -2,10 +2,12 @@ import Rol from '../models/Rol.js';
 
 export const getRoles = async (req, res) => {
   try {
-    const roles = await Rol.find();
+    const roles = await Rol.find().sort({ nombre: 1 }); // Ordenar por nombre
+    console.log(`📊 Roles encontrados en MongoDB: ${roles.length}`);
     res.json(roles);
   } catch (err) {
-    res.status(500).json({ error: "Error en el servidor" });
+    console.error('❌ Error al obtener roles:', err);
+    res.status(500).json({ error: "Error en el servidor", msg: err.message });
   }
 };
 

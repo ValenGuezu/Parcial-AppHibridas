@@ -14,7 +14,8 @@ export const getAgentes = async (req, res) => {
       if (rolDoc) query.rol = rolDoc._id;
     }
 
-    const agentes = await Agente.find(query);
+    // Usar populate para obtener el objeto completo del rol
+    const agentes = await Agente.find(query).populate('rol', 'nombre descripcion');
     res.json(agentes);
   } catch (err) {
     res.status(500).json({ error: "Error en el servidor" });
@@ -23,7 +24,8 @@ export const getAgentes = async (req, res) => {
 
 export const getAgenteById = async (req, res) => {
   try {
-    const agente = await Agente.findById(req.params.id);
+    // Usar populate para obtener el objeto completo del rol
+    const agente = await Agente.findById(req.params.id).populate('rol', 'nombre descripcion');
     if (!agente) return res.status(404).json({ error: "No encontrado" });
     res.json(agente);
   } catch (err) {
@@ -35,7 +37,9 @@ export const createAgente = async (req, res) => {
   try {
     const nuevo = new Agente(req.body);
     const guardado = await nuevo.save();
-    res.status(201).json(guardado);
+    // Usar populate para devolver el rol completo
+    const agenteCompleto = await Agente.findById(guardado._id).populate('rol', 'nombre descripcion');
+    res.status(201).json(agenteCompleto);
   } catch (err) {
     res.status(400).json({ error: "Error al crear agente" });
   }
@@ -43,7 +47,7 @@ export const createAgente = async (req, res) => {
 
 export const updateAgente = async (req, res) => {
   try {
-    const actualizado = await Agente.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const actualizado = await Agente.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('rol', 'nombre descripcion');
     if (!actualizado) return res.status(404).json({ error: "No encontrado" });
     res.json(actualizado);
   } catch (err) {

@@ -1,0 +1,31 @@
+===========================================
+INSTRUCCIONES RÁPIDAS PARA PROBAR EL BACKEND
+===========================================
+
+1. CREAR ARCHIVO .env en esta carpeta (Backend/) con:
+
+MONGODB_URI=mongodb://localhost:27017/r6_parcial
+PORT=3000
+JWT_SECRET=mi_clave_secreta_super_segura_123456789
+JWT_EXPIRES_IN=24h
+
+2. INSTALAR DEPENDENCIAS (si no lo has hecho):
+   npm install
+
+3. INICIAR EL SERVIDOR:
+   npm run dev
+
+4. VERIFICAR QUE FUNCIONA:
+   Abre: http://localhost:3000
+   Deberías ver: "API REST"
+
+5. PROBAR REGISTRO:
+   POST http://localhost:3000/api/auth/register
+   Body: { "nombre": "Test", "email": "test@test.com", "password": "123456" }
+
+6. PROBAR LOGIN:
+   POST http://localhost:3000/api/auth/login
+   Body: { "email": "test@test.com", "password": "123456" }
+
+¡IMPORTANTE! MongoDB debe estar corriendo antes de iniciar el servidor.
+
