@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>API Rainbow Six Siege</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>API RESTful - Rainbow Six Siege</h1>
+  <p>Bienvenido a la API del parcial de Aplicaciones Híbridas.</p>
+
+  <h2>Endpoints principales</h2>
+  <ul>
+    <li><a href="/api/usuarios">/api/usuarios</a></li>
+    <li><a href="/api/agentes">/api/agentes</a></li>
+    <li><a href="/api/roles">/api/roles</a></li>
+  </ul>
+
+  <div class="endpoint-info">
+    <h3>GET</h3>
+    <p>Obtiene información de la colección correspondiente. Ejemplo: `/api/agentes` devuelve todos los agentes, `/api/roles` devuelve todos los roles.</p>
+  </div>
+
+  <div class="endpoint-info">
+    <h3>POST</h3>
+    <p>Permite crear un nuevo recurso. Por ejemplo, POST a `/api/roles` crea un nuevo rol, POST a `/api/agentes` crea un nuevo agente asignándole un rol existente.</p>
+  </div>
+
+  <div class="endpoint-info">
+    <h3>PUT</h3>
+    <p>Actualiza un recurso existente. Ejemplo: PUT a `/api/agentes/:id` permite modificar el nombre, biografía, país o rol de un agente específico.</p>
+  </div>
+
+  <div class="endpoint-info">
+    <h3>DELETE</h3>
+    <p>Elimina un recurso existente. Ejemplo: DELETE a `/api/roles/:id` borra un rol y DELETE a `/api/agentes/:id` borra un agente específico.</p>
+  </div>
+
+  <footer>
+    <p>Alumnos: Santino Cagnoni y Valentino Guezugutchikian</p>
+    <p>Materia: Aplicaciones Híbridas</p>
+    <p>Docente: Cruz, Jonathan Emanuel</p>
+    <p>Comisión: dwm4ap</p>
+  </footer>
+</body>
+</html>
