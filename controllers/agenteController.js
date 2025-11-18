@@ -1,6 +1,7 @@
 import Agente from '../models/Agente.js';
 import Rol from '../models/Rol.js';
 
+// Obtener todos los agentes (con filtros simples por rol o nombre exacto)
 export const getAgentes = async (req, res) => {
   try {
     const { rol, nombre } = req.query;

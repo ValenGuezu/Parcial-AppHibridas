@@ -1,31 +1,37 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-import agenteRoutes from './routes/agenteRoutes.js';
-import usuarioRoutes from './routes/usuarioRoutes.js';
-import rolRoutes from './routes/rolRoutes.js';
-
+import routerApi from './routes/index.js';
 
 dotenv.config();
+
+const urldb = process.env.MONGODB_URI || process.env.URI_DB;
+mongoose.connect(urldb);
+const db = mongoose.connection;
+
+db.on('error', () => { console.error('Error de conexión') });
+db.on('open', () => { console.log('Conexión con la DB') });
+
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-app.use('/api/agentes', agenteRoutes);
-app.use('/api/usuarios', usuarioRoutes);
-app.use('/api/roles', rolRoutes);
-
+// Página principal
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'views')));
+app.use('/', express.static(path.join(__dirname, 'views')));
 
-const PORT = process.env.PORT || 3000;
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Conectado a MongoDB');
-    app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
-  })
-  .catch(err => console.error('Error al conectar a MongoDB:', err));
+app.get('/', (req, res) => {
+  res.send('<h1>API REST</h1>');
+});
+
+routerApi(app);
+
+app.listen(PORT, () => {
+  console.log(`API REST en el puerto ${PORT}`);
+});
