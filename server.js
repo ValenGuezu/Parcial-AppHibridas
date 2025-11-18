@@ -20,6 +20,13 @@ if (!urldb) {
   process.exit(1);
 }
 
+// Verificar que JWT_SECRET esté configurado
+if (!process.env.JWT_SECRET) {
+  console.error('❌ ERROR: JWT_SECRET no está definido en las variables de entorno');
+  console.error('Por favor, configura JWT_SECRET en Render o en el archivo .env');
+  process.exit(1);
+}
+
 mongoose.connect(urldb);
 const db = mongoose.connection;
 
@@ -44,12 +51,17 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+// Aumentar el límite de tamaño del body para permitir imágenes en base64 (hasta 50MB)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Página principal
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/', express.static(path.join(__dirname, 'views')));
+
+// Servir archivos estáticos de uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.send('<h1>API REST</h1>');

@@ -12,6 +12,10 @@ import Usuario from '../models/Usuario.js';
  * @returns {String} Token JWT
  */
 export const generateToken = (userId) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET no está configurado en las variables de entorno');
+  }
+  
   return jwt.sign(
     { userId },
     process.env.JWT_SECRET,
@@ -27,23 +31,42 @@ export const generateToken = (userId) => {
 export const registerUser = async (userData) => {
   const { nombre, email, password } = userData;
 
+  // Validaciones básicas
+  if (!nombre || !email || !password) {
+    throw new Error('Todos los campos son requeridos');
+  }
+
   // Verificar si el usuario ya existe
   const usuarioExistente = await Usuario.findOne({ email });
   if (usuarioExistente) {
     throw new Error('El email ya está registrado');
   }
 
-  // Crear nuevo usuario (la contraseña se encripta automáticamente en el pre-save)
-  const nuevoUsuario = new Usuario({
-    nombre,
-    email,
-    password
-  });
+  try {
+    // Crear nuevo usuario (la contraseña se encripta automáticamente en el pre-save)
+    const nuevoUsuario = new Usuario({
+      nombre: nombre.trim(),
+      email: email.trim().toLowerCase(),
+      password: password
+    });
 
-  await nuevoUsuario.save();
+    await nuevoUsuario.save();
 
-  // Retornar usuario sin password (gracias al método toJSON)
-  return nuevoUsuario;
+    // Retornar usuario sin password (gracias al método toJSON)
+    return nuevoUsuario;
+  } catch (error) {
+    console.error('❌ Error al guardar usuario:', error);
+    // Si es un error de validación de Mongoose, lanzarlo tal cual
+    if (error.name === 'ValidationError') {
+      throw error;
+    }
+    // Si es un error de duplicado
+    if (error.code === 11000) {
+      throw new Error('El email ya está registrado');
+    }
+    // Otro error
+    throw new Error(`Error al crear usuario: ${error.message}`);
+  }
 };
 
 /**

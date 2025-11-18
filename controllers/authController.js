@@ -59,10 +59,12 @@ export const register = async (req, res) => {
     }
 
     // Error genérico
-    console.error('Error en register:', error);
+    console.error('❌ Error en register:', error);
+    console.error('Stack:', error.stack);
     res.status(500).json({
       msg: 'Error al registrar usuario',
-      error: error.message
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
